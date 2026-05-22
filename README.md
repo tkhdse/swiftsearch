@@ -1,3 +1,3 @@
-# log-processing
+# Swift Search
 
-A Swift-based Kafka implementation for processing log data.
+A mini distributed search engine (like Elastisearch). 
