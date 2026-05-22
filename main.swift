@@ -1,1 +1,3 @@
-"hello world"
+var helloWorld = "hello world!"
+
+print(helloWorld)
