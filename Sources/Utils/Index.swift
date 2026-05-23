@@ -35,10 +35,11 @@ public class Index {
     public func peek() {
         print("Printing index ...")
         for (key,value) in self.data {
-            print("\(key): ")
+            print("\(key): {")
             for (id, positions) in value {
                 print("\t\(id): \(positions)")
             }
+            print("}")
         }
     }
 }
