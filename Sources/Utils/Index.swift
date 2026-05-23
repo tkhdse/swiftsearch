@@ -1,7 +1,9 @@
 import Foundation
 
 public class Index {
-    var data: [String: [UUID]]
+    // word -> ids -> position in doc(id)
+    var data: [String: [UUID: [Int]]]
+
     var tokenizer: Tokenizer
 
     public init() {
@@ -13,9 +15,14 @@ public class Index {
         let id = document.id
         var tokens = self.tokenizer.tokenize(input: document.content)
 
-        for token in tokens {
-            var ids = self.data[token] ?? []
-            ids.append(id)
+        for i in 0...tokens.count-1 {
+            let token = tokens[i]
+
+            var ids = self.data[token] ?? [:]
+            var positions = ids[id] ?? []
+            positions.append(i)
+
+            ids[id] = positions
             self.data[token] = ids
         }
     }
@@ -28,7 +35,10 @@ public class Index {
     public func peek() {
         print("Printing index ...")
         for (key,value) in self.data {
-            print("\(key): \(value)")
+            print("\(key): ")
+            for (id, positions) in value {
+                print("\t\(id): \(positions)")
+            }
         }
     }
 }

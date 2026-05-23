@@ -1,9 +1,8 @@
 import Utils
 
-
 let doc1 = Document(body: "the fox jumps over the dog and eats the squirrel")
 let doc2 = Document(body: "kitty kat")
-let doc3 = Document(body: "i like fox kats and dogs")
+let doc3 = Document(body: "i like the fox kat and dog")
 
 print("doc1: \(doc1.id)")
 print("doc2: \(doc2.id)")
