@@ -14,4 +14,7 @@ index.insert(document: doc1)
 index.insert(document: doc2)
 index.insert(document: doc3)
 
-index.peek()
+// index.peek()
+
+var qe = QueryEngine(index)
+print(qe.query("the"))

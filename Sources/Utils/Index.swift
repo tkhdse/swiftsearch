@@ -32,6 +32,19 @@ public class Index {
         // if a key has no associated Ids, remove the key
     }
 
+    func retrieveDocs(_ token: String) -> [UUID:[Int]] {
+        if let val = self.data[token] {
+            return val
+        }
+        return [:]
+    }
+
+
+    // public func search(_ query: String) {
+    //     let words = query.components(separateBy: " ")
+
+    // }
+
     public func peek() {
         print("Printing index ...")
         for (key,value) in self.data {
