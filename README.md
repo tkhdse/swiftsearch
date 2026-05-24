@@ -1,3 +1,3 @@
 # Swift Search
 
-A mini distributed search engine (like Elastisearch). 
+A mini search engine (like Elastisearch). 
