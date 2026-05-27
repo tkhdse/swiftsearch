@@ -1,6 +1,6 @@
 import Foundation
 
-public class QueryEngine {
+public actor QueryEngine {
     var index: Index
 
     // support Boolean queries: AND, OR, NOT
@@ -12,9 +12,9 @@ public class QueryEngine {
         self.index = index
     }
 
-    public func query(_ token: String) -> [UUID:[Int]] {
+    public func query(_ token: String) async -> [UUID:[Int]] {
         if !token.isEmpty {
-            return index.retrieveDocs(token)
+            return await index.retrieveDocs(token)
         }
         return [:]
     }

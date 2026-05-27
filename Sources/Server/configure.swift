@@ -3,24 +3,35 @@ import NIOSSL
 // import FluentPostgresDriver
 // import Leaf
 import Vapor
+import Utils
+
+
+extension Application {
+    private struct QueryEngineKey: StorageKey {
+        typealias Value = QueryEngine
+    }
+
+    var queryEngine: QueryEngine {
+        get { storage[QueryEngineKey.self]! }
+        set { storage[QueryEngineKey.self] = newValue }
+    }
+}
 
 // configures your application
 public func configure(_ app: Application) async throws {
-    // uncomment to serve files from /Public folder
-    // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
-
-    // app.databases.use(DatabaseConfigurationFactory.postgres(configuration: .init(
-    //     hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-    //     port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? SQLPostgresConfiguration.ianaPortNumber,
-    //     username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-    //     password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-    //     database: Environment.get("DATABASE_NAME") ?? "vapor_database",
-    //     tls: .prefer(try .init(configuration: .clientDefault)))
-    // ), as: .psql)
-
-    // app.migrations.add(CreateTodo())
 
     // app.views.use(.leaf)
+    let doc1 = Document(body: "the fox jumps over the dog and eats the squirrel")
+    let doc2 = Document(body: "kitty kat")
+    let doc3 = Document(body: "i like the fox kat and dog")
+
+    let index = Index()
+
+    await index.insert(document: doc1)
+    await index.insert(document: doc2)
+    await index.insert(document: doc3)
+
+    app.queryEngine = QueryEngine(index)
 
     // register routes
     try routes(app)

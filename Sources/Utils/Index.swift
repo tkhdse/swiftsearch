@@ -1,6 +1,6 @@
 import Foundation
 
-public class Index {
+public actor Index {
     // word -> ids -> position in doc(id)
     var data: [String: [UUID: [Int]]]
 
