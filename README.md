@@ -7,7 +7,7 @@ A mini search engine (like Elastisearch).
 swift run Server
 ```
 
-Supported operations from client:
+Supported client operations:
 * `/query/[search term(s)]`: returns a map of `docId` to token positions.
 ```
 curl 127.0.0.1:8080/query/[search term(s)]
