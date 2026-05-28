@@ -11,9 +11,9 @@ public actor Index {
         self.tokenizer = Tokenizer()
     }
 
-    public func insert(document: Document) {
+    public func insert(document: sending Document) -> Int {
         let id = document.id
-        var tokens = self.tokenizer.tokenize(input: document.content)
+        let tokens = self.tokenizer.tokenize(input: document.content)
 
         for i in 0...tokens.count-1 {
             let token = tokens[i]
@@ -25,6 +25,8 @@ public actor Index {
             ids[id] = positions
             self.data[token] = ids
         }
+
+        return 0
     }
 
     func remove(documentId: Int) {
@@ -32,8 +34,22 @@ public actor Index {
         // if a key has no associated Ids, remove the key
     }
 
-    func retrieveDocs(_ token: String) -> [UUID:[Int]] {
-        if let val = self.data[token] {
+    func retrieveDocs(_ searchQuery: String) -> [UUID:[Int]] {
+        // term, phrase, prefix queries
+
+        // var pool = Set<UUID>()
+
+        // let tokens = searchQuery.split(seperator: " ")
+
+        // for i in 0...tokens.count-1 {
+        //     let token = tokens[i]
+        //     if let val = self.data[token] {
+        //         Set(val.keys())
+        //     }
+        // }
+
+
+        if let val = self.data[searchQuery] {
             return val
         }
         return [:]

@@ -19,6 +19,11 @@ public actor QueryEngine {
         return [:]
     }
 
+    public func insertDoc(document: sending Document) async -> Int {
+        let ret = await self.index.insert(document: document)
+        return ret
+    }
+
 
     func parseCommand(_ cmd: String) {
         // support single-word queries first

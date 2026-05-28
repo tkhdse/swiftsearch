@@ -11,27 +11,37 @@ extension Application {
         typealias Value = QueryEngine
     }
 
+    // private struct ParserKey: StorageKey {
+    //     typealias Value = Parser
+    // }
+
     var queryEngine: QueryEngine {
         get { storage[QueryEngineKey.self]! }
         set { storage[QueryEngineKey.self] = newValue }
     }
+
+    // var parser: Parser {
+    //     get { storage[ParserKey.self]! }
+    //     set { storage[ParserKey.self] = newValue }
+    // }
 }
 
 // configures your application
 public func configure(_ app: Application) async throws {
 
     // app.views.use(.leaf)
-    let doc1 = Document(body: "the fox jumps over the dog and eats the squirrel")
-    let doc2 = Document(body: "kitty kat")
-    let doc3 = Document(body: "i like the fox kat and dog")
+    // let doc1 = Document(body: "the fox jumps over the dog and eats the squirrel")
+    // let doc2 = Document(body: "kitty kat")
+    // let doc3 = Document(body: "i like the fox kat and dog")
 
     let index = Index()
 
-    await index.insert(document: doc1)
-    await index.insert(document: doc2)
-    await index.insert(document: doc3)
+    // await index.insert(document: doc1)
+    // await index.insert(document: doc2)
+    // await index.insert(document: doc3)
 
     app.queryEngine = QueryEngine(index)
+    // app.parser = Parser()
 
     // register routes
     try routes(app)
