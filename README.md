@@ -15,3 +15,9 @@ curl 127.0.0.1:8080/query/[search term(s)]
 # example response: 
 # {"B92D7BD8-F67E-47C4-AA17-7A6E46662598":[0,4,8],"1098BE07-057D-4A3D-A379-38128C7E4645":[2]}
 ```
+
+
+* POST `/insert`: uploads a `.txt` document to the search index.
+```
+curl -X POST --data-binary @inputs/FILENAME.txt 127.0.0.1:8080/insert
+```
