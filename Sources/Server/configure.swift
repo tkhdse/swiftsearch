@@ -11,19 +11,11 @@ extension Application {
         typealias Value = QueryEngine
     }
 
-    // private struct ParserKey: StorageKey {
-    //     typealias Value = Parser
-    // }
-
     var queryEngine: QueryEngine {
         get { storage[QueryEngineKey.self]! }
         set { storage[QueryEngineKey.self] = newValue }
     }
 
-    // var parser: Parser {
-    //     get { storage[ParserKey.self]! }
-    //     set { storage[ParserKey.self] = newValue }
-    // }
 }
 
 // configures your application
@@ -41,7 +33,6 @@ public func configure(_ app: Application) async throws {
     // await index.insert(document: doc3)
 
     app.queryEngine = QueryEngine(index)
-    // app.parser = Parser()
 
     // register routes
     try routes(app)
