@@ -2,6 +2,9 @@
 import Vapor
 import Utils
 
+struct Query: Content {
+    var q: String?
+}
 
 func routes(_ app: Application) throws {
     app.get { req async -> String in
@@ -13,15 +16,19 @@ func routes(_ app: Application) throws {
     //     "Hello, world!"
     // }
 
-    app.get("info") {req -> [String] in 
+    app.get("info") {req throws -> [String] in 
         let index = req.application.queryEngine.getIndex()
         let uuidDocs = index.getDocs()
         let docs = uuidDocs.map{ id in id.uuidString }
         return docs
     }
 
-    app.get("query", ":query") { req async -> [String:[Int]] in
-        let query = req.parameters.get("query")!
+    app.get("search") { req async throws -> [String:[Int]] in
+        let queryParams = try req.query.decode(Query.self) //req.parameters.get("query")!
+        guard let query = queryParams.q else {
+            return [:]
+        }
+
         let results = await req.application.queryEngine.query(query)
         let ret = Dictionary(uniqueKeysWithValues: 
             results.map { (id, pos) in (id.uuidString, pos) }
