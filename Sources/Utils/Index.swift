@@ -40,21 +40,7 @@ public actor Index {
         // if a key has no associated Ids, remove the key
     }
 
-    func retrieveDocs(_ searchQuery: String) -> [UUID:[Int]] {
-        // term, phrase, prefix queries
-
-        // var pool = Set<UUID>()
-
-        // let tokens = searchQuery.split(seperator: " ")
-
-        // for i in 0...tokens.count-1 {
-        //     let token = tokens[i]
-        //     if let val = self.data[token] {
-        //         Set(val.keys())
-        //     }
-        // }
-
-
+    func get(_ searchQuery: String) -> [UUID:[Int]] {
         if let val = self.data[searchQuery] {
             return val
         }

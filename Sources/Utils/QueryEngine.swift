@@ -12,11 +12,14 @@ public actor QueryEngine {
         self.index = index
     }
 
-    public func query(_ token: String) async -> [UUID:[Int]] {
-        if !token.isEmpty {
-            return await index.retrieveDocs(token)
+    public func search(_ query: Sting) async -> [UUID:[Int]] {
+        if query.isEmpty {
+            return [:]
         }
-        return [:]
+        
+        
+
+        return await index.get(query)
     }
 
     public func insertDoc(document: sending Document) async -> Int {
@@ -27,14 +30,12 @@ public actor QueryEngine {
 
     func parseCommand(_ cmd: String) {
         // support single-word queries first
-
         // cmd.split(seperator: " ")
-
         // use stack to support command chaining (??)
     }
+
 
     public func getIndex() -> Index {
         return self.index
     }
-
 }

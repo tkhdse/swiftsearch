@@ -29,7 +29,7 @@ func routes(_ app: Application) throws {
             return [:]
         }
 
-        let results = await req.application.queryEngine.query(query)
+        let results = await req.application.queryEngine.search(query)
         let ret = Dictionary(uniqueKeysWithValues: 
             results.map { (id, pos) in (id.uuidString, pos) }
         )
