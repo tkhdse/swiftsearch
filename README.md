@@ -35,4 +35,8 @@ curl 127.0.0.1:8080/info
 
 ## To Do:
 * `/remove/{doc_id}`
-* 
+* Persistence via WAL
+* Support more query patterns (boolean, phrase, prefix)
+* Avoid `/insert` for duplicate documents
+* Upgrade the `Tokenizer`
+* Tackle scalability (sharding, replication, ...)
