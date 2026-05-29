@@ -3,12 +3,13 @@ import Foundation
 public actor Index {
     // word -> ids -> position in doc(id)
     var data: [String: [UUID: [Int]]]
-
     var tokenizer: Tokenizer
+    var docsList: [UUID]
 
     public init() {
-        self.data = [:]
+        self.data = [:] // token -> [UUID -> [positions]]
         self.tokenizer = Tokenizer()
+        self.docsList = []
     }
 
     public func insert(document: sending Document) -> Int {
@@ -26,7 +27,12 @@ public actor Index {
             self.data[token] = ids
         }
 
+        self.docsList.append(id)
         return 0
+    }
+
+    public func getDocs() -> [UUID] {
+        return self.docsList
     }
 
     func remove(documentId: Int) {

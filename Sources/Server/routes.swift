@@ -9,8 +9,15 @@ func routes(_ app: Application) throws {
         "OK"
     }
 
-    app.get("hello") { req async -> String in
-        "Hello, world!"
+    // app.get("hello") { req async -> String in
+    //     "Hello, world!"
+    // }
+
+    app.get("info") {req -> [String] in 
+        let index = req.application.queryEngine.getIndex()
+        let uuidDocs = index.getDocs()
+        let docs = uuidDocs.map{ id in id.uuidString }
+        return docs
     }
 
     app.get("query", ":query") { req async -> [String:[Int]] in

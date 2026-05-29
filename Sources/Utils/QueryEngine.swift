@@ -33,4 +33,8 @@ public actor QueryEngine {
         // use stack to support command chaining (??)
     }
 
+    public func getIndex() -> Index {
+        return self.index
+    }
+
 }
