@@ -8,7 +8,7 @@ swift run Server
 ```
 
 ## Supported client operations:
-* `/query/[search term(s)]`: returns a map of `docId` to token positions.
+* GET `/query/[search term(s)]`: returns a map of `docId` to token positions.
 ```
 curl 127.0.0.1:8080/query/[search term(s)]
 
@@ -20,4 +20,10 @@ curl 127.0.0.1:8080/query/[search term(s)]
 * POST `/insert`: uploads a `.txt` document to the search index.
 ```
 curl -X POST --data-binary @inputs/FILENAME.txt 127.0.0.1:8080/insert
+```
+
+* GET `/info`: returns a list of registered documents.
+```
+# still contains duplicate document upload bug -- fix this
+curl 127.0.0.1:8080/info
 ```
