@@ -2,7 +2,7 @@ import Foundation
 
 public actor Index {
     // word -> ids -> position in doc(id)
-    var data: [String: [UUID: [Int]]]
+    var data: [String: [UUID: Set<Int>]]
     var tokenizer: Tokenizer
     var docsList: [UUID]
 
@@ -21,7 +21,7 @@ public actor Index {
 
             var ids = self.data[token] ?? [:]
             var positions = ids[id] ?? []
-            positions.append(i)
+            positions.insert(i)
 
             ids[id] = positions
             self.data[token] = ids
@@ -40,7 +40,7 @@ public actor Index {
         // if a key has no associated Ids, remove the key
     }
 
-    func get(_ searchQuery: String) -> [UUID:[Int]] {
+    func get(_ searchQuery: String) -> [UUID:Set<Int>] {
         if let val = self.data[searchQuery] {
             return val
         }

@@ -12,16 +12,16 @@ public actor QueryEngine {
         self.index = index
     }
 
-    public func search(_ query: Sting) async -> [UUID:[Int]] {
+    public func search(_ query: String) async -> [UUID:Set<Int>] {
         if query.isEmpty {
             return [:]
         }
 
 
         
-        let tokens = query.split(seperator: " ")
+        let tokens = query.components(separatedBy: " ")
         if tokens.count > 1 {
-            handlePhrase(tokens)
+            return await handlePhrase(tokens: tokens)
         }
 
         return await index.get(query)
@@ -33,53 +33,37 @@ public actor QueryEngine {
     }
 
 
-    func handlePhrase(tokens: [String]) async -> [UUID:[Int]] {
+    func handlePhrase(tokens: [String]) async -> [UUID:Set<Int>] {
         
-        // prefix tree => 
-        // root is tokens[0]
-
-        "the cat jumps on the dog"
-
-        // the -> [
-        //          id1: [p1,p2,p3]
-        //          id2: [p4,p5,p6]  
-        //        ]
-
-        // cat -> [
-        //          id1: [p3+1]
-        //          id2: [p4+1]
-        //          id3: [p7]
-        //        ]
-
-        // jumps -> [
-        //              id1: [p3+2]
-        //              id2: [p4+2]
-        //          ]
-
-        // 
-
-
-        class LinkedToken {
-            var parent: LinkedToken
-
-            public init(positions: [UUID:[Int]]) {
-                self.parent = nil
-                self.positions = positions
-            }
-        }
-
-        var positions = await self.index.get(tokens[0])
-        let root = LinkedToken()
-        var cur = root
-        var matches = []
+        var prev_token_data = await self.index.get(tokens[0])
 
         for i in 1...tokens.count-1 {
             let tkn = tokens[i]
-            positions = await self.index.get(tkn)
-            var node = LinkedToken(positions)
 
-            
+            // make sure this retrieves a copy, otherwise index itself will change
+            var cur_token_data = await self.index.get(tkn) 
+
+            // compare against previous token's UUID's & positions
+            for uuid in cur_token_data.keys {
+                if prev_token_data[uuid] == nil {
+                    cur_token_data.removeValue(forKey: uuid)
+                    continue
+                }
+
+                var positions = cur_token_data[uuid]!
+                let prev_positions = prev_token_data[uuid]!
+
+                for pos in positions {
+                    if !prev_positions.contains(pos) {
+                        positions.remove(pos)
+                    }
+                }
+            }
+
+            prev_token_data = cur_token_data
         }
+
+        return prev_token_data
     }
 
     func parseCommand(_ cmd: String) {

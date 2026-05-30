@@ -31,7 +31,7 @@ func routes(_ app: Application) throws {
 
         let results = await req.application.queryEngine.search(query)
         let ret = Dictionary(uniqueKeysWithValues: 
-            results.map { (id, pos) in (id.uuidString, pos) }
+            results.map { (id, pos) in (id.uuidString, Array(pos)) }
         )
         return ret
     }
