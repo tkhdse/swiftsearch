@@ -18,8 +18,15 @@ func routes(_ app: Application) throws {
 
     app.get("info") {req throws -> [String] in 
         let index = req.application.queryEngine.getIndex()
-        let uuidDocs = index.getDocs()
-        let docs = uuidDocs.map{ id in id.uuidString }
+        let id_to_doc = index.getDocs()
+
+        var docs: [String] = []
+
+        for (id, content) in id_to_doc {
+            docs.append("\(id.uuidString): \(content)")
+        }
+
+        // let docs = uuidDocs.map{ id in id.uuidString }
         return docs
     }
 

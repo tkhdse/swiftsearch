@@ -16,8 +16,6 @@ public actor QueryEngine {
         if query.isEmpty {
             return [:]
         }
-
-
         
         let tokens = query.components(separatedBy: " ")
         if tokens.count > 1 {
@@ -36,31 +34,42 @@ public actor QueryEngine {
     func handlePhrase(tokens: [String]) async -> [UUID:Set<Int>] {
         
         var prev_token_data = await self.index.get(tokens[0])
+        print("tokens: \(tokens)")
 
         for i in 1...tokens.count-1 {
             let tkn = tokens[i]
+            print("tkn: \(tkn)")
+
+            if prev_token_data.isEmpty {
+                break
+            }
 
             // make sure this retrieves a copy, otherwise index itself will change
-            var cur_token_data = await self.index.get(tkn) 
+            let cur_token_data = await self.index.get(tkn) 
+            print("current: \(cur_token_data)")
 
-            // compare against previous token's UUID's & positions
-            for uuid in cur_token_data.keys {
-                if prev_token_data[uuid] == nil {
-                    cur_token_data.removeValue(forKey: uuid)
+            // compare against curr token's UUID's & positions and narrow accordingly
+            for uuid in prev_token_data.keys {
+                if cur_token_data[uuid] == nil {
+                    prev_token_data.removeValue(forKey: uuid)
                     continue
                 }
 
-                var positions = cur_token_data[uuid]!
-                let prev_positions = prev_token_data[uuid]!
+                let positions = cur_token_data[uuid]!
+                var prev_positions = prev_token_data[uuid]!
 
-                for pos in positions {
-                    if !prev_positions.contains(pos) {
-                        positions.remove(pos)
+                for pos in prev_positions {
+                    if !positions.contains(pos+i) {
+                        prev_positions.remove(pos)
                     }
+                }
+
+                if prev_positions.isEmpty {
+                    prev_token_data.removeValue(forKey: uuid)
                 }
             }
 
-            prev_token_data = cur_token_data
+            print("token_data: \(prev_token_data)")
         }
 
         return prev_token_data

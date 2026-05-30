@@ -4,12 +4,12 @@ public actor Index {
     // word -> ids -> position in doc(id)
     var data: [String: [UUID: Set<Int>]]
     var tokenizer: Tokenizer
-    var docsList: [UUID]
+    var docsList: [UUID:String]
 
     public init() {
         self.data = [:] // token -> [UUID -> [positions]]
         self.tokenizer = Tokenizer()
-        self.docsList = []
+        self.docsList = [:]
     }
 
     public func insert(document: sending Document) -> Int {
@@ -27,11 +27,11 @@ public actor Index {
             self.data[token] = ids
         }
 
-        self.docsList.append(id)
+        self.docsList[id] = document.content
         return 0
     }
 
-    public func getDocs() -> [UUID] {
+    public func getDocs() -> [UUID:String] {
         return self.docsList
     }
 
