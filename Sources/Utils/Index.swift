@@ -35,7 +35,7 @@ public actor Index {
         return self.docsList
     }
 
-    func remove(documentId: Int) {
+    func remove(docId: Int) {
         // implement later: given docId, scan through Index and remove instances of docId
         // if a key has no associated Ids, remove the key
     }

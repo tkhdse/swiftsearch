@@ -50,5 +50,11 @@ func routes(_ app: Application) throws {
         return HTTPStatus.ok
     }
 
+
+    app.delete("doc", ":docId") { req async in
+        let id = req.parameters.get("docId")
+        return HTTPStatus.ok
+    }
+
     // try app.register(collection: TodoController())
 }

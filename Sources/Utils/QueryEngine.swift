@@ -19,7 +19,7 @@ public actor QueryEngine {
         
         let tokens = query.components(separatedBy: " ")
         if tokens.count > 1 {
-            return await handlePhrase(tokens: tokens)
+            return await searchForPhrase(tokens: tokens)
         }
 
         return await index.get(query)
@@ -31,7 +31,7 @@ public actor QueryEngine {
     }
 
 
-    func handlePhrase(tokens: [String]) async -> [UUID:Set<Int>] {
+    func searchForPhrase(tokens: [String]) async -> [UUID:Set<Int>] {
         var prev_token_data = await self.index.get(tokens[0])
 
         for i in 1...tokens.count-1 {
