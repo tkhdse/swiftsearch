@@ -32,13 +32,10 @@ public actor QueryEngine {
 
 
     func handlePhrase(tokens: [String]) async -> [UUID:Set<Int>] {
-        
         var prev_token_data = await self.index.get(tokens[0])
-        print("tokens: \(tokens)")
 
         for i in 1...tokens.count-1 {
             let tkn = tokens[i]
-            print("tkn: \(tkn)")
 
             if prev_token_data.isEmpty {
                 break
@@ -46,7 +43,6 @@ public actor QueryEngine {
 
             // make sure this retrieves a copy, otherwise index itself will change
             let cur_token_data = await self.index.get(tkn) 
-            print("current: \(cur_token_data)")
 
             // compare against curr token's UUID's & positions and narrow accordingly
             for uuid in prev_token_data.keys {
@@ -56,20 +52,17 @@ public actor QueryEngine {
                 }
 
                 let positions = cur_token_data[uuid]!
-                var prev_positions = prev_token_data[uuid]!
 
-                for pos in prev_positions {
+                for pos in prev_token_data[uuid]! {
                     if !positions.contains(pos+i) {
-                        prev_positions.remove(pos)
+                        prev_token_data[uuid]!.remove(pos)
                     }
                 }
 
-                if prev_positions.isEmpty {
+                if prev_token_data[uuid]!.isEmpty {
                     prev_token_data.removeValue(forKey: uuid)
                 }
             }
-
-            print("token_data: \(prev_token_data)")
         }
 
         return prev_token_data
