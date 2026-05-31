@@ -12,7 +12,7 @@ public actor Index {
         self.docsList = [:]
     }
 
-    public func insert(document: sending Document) -> Int {
+    public func insertDoc(document: sending Document) -> Int {
         let id = document.id
         let tokens = self.tokenizer.tokenize(input: document.content)
 
@@ -35,9 +35,14 @@ public actor Index {
         return self.docsList
     }
 
-    func remove(docId: Int) {
-        // implement later: given docId, scan through Index and remove instances of docId
-        // if a key has no associated Ids, remove the key
+    public func removeDoc(docId: UUID) -> Int {
+        if self.docsList[docId] == nil {
+            self.docsList.removeValue(forKey: docId)
+        }
+
+        // to do: update index structure
+
+        return 0
     }
 
     func get(_ searchQuery: String) -> [UUID:Set<Int>] {

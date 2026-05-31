@@ -25,10 +25,10 @@ public actor QueryEngine {
         return await index.get(query)
     }
 
-    public func insertDoc(document: sending Document) async -> Int {
-        let ret = await self.index.insert(document: document)
-        return ret
-    }
+    // public func insertDoc(document: sending Document) async -> Int {
+    //     let ret = await self.index.insert(document: document)
+    //     return ret
+    // }
 
 
     func searchForPhrase(tokens: [String]) async -> [UUID:Set<Int>] {

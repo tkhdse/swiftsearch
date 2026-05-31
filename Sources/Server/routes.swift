@@ -16,9 +16,9 @@ func routes(_ app: Application) throws {
     //     "Hello, world!"
     // }
 
-    app.get("info") {req throws -> [String] in 
-        let index = req.application.queryEngine.getIndex()
-        let id_to_doc = index.getDocs()
+    app.get("info") {req async throws -> [String] in 
+        let index = await req.application.queryEngine.getIndex()
+        let id_to_doc = await index.getDocs()
 
         var docs: [String] = []
 
@@ -46,13 +46,20 @@ func routes(_ app: Application) throws {
     app.post("insert") { req async throws in 
         guard let body = req.body.string else { throw Abort(.badRequest)}
         let doc = Document(body: body)
-        await req.application.queryEngine.insertDoc(document: doc)
+
+        let index = await req.application.queryEngine.getIndex()
+        await index.insertDoc(document: doc)
         return HTTPStatus.ok
     }
 
 
-    app.delete("doc", ":docId") { req async in
-        let id = req.parameters.get("docId")
+    app.delete("doc", ":docId") { req async throws in
+        guard let docId = req.parameters.get("docId"), let id = UUID(docId) else {
+            return HTTPStatus.badRequest
+        }
+
+        let index = await req.application.queryEngine.getIndex()
+        await index.removeDoc(docId: id)
         return HTTPStatus.ok
     }
 
