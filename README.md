@@ -33,8 +33,15 @@ curl -X POST --data-binary @inputs/FILENAME.txt 127.0.0.1:8080/insert
 curl 127.0.0.1:8080/info
 ```
 
+* DELETE `/doc/[docId]`: removes a document from the index data structure
+```
+curl -X DELETE 127.0.0.1:8080/doc/[docId]
+```
+
+
 ## To Do:
-* `/remove/{doc_id}`
+* Finish `/remove/{doc_id}`
+* Protect against duplicate file uploads
 * Persistence via WAL
 * Support more query patterns (boolean, phrase, prefix)
 * Avoid `/insert` for duplicate documents

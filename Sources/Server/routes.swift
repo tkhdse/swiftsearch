@@ -44,7 +44,7 @@ func routes(_ app: Application) throws {
     }
 
     app.post("insert") { req async throws in 
-        guard let body = req.body.string else { throw Abort(.badRequest)}
+        guard let body = req.body.string else { throw Abort(.badRequest) }
         let doc = Document(body: body)
 
         let index = await req.application.queryEngine.getIndex()
@@ -55,11 +55,17 @@ func routes(_ app: Application) throws {
 
     app.delete("doc", ":docId") { req async throws in
         guard let docId = req.parameters.get("docId"), let id = UUID(docId) else {
-            return HTTPStatus.badRequest
+            // return HTTPStatus.badRequest
+            throw Abort(.badRequest, reason: "Invalid document ID format")
         }
 
         let index = await req.application.queryEngine.getIndex()
-        await index.removeDoc(docId: id)
+        let success = await index.removeDoc(docId: id)
+
+        guard success else {
+            throw Abort(.notFound, reason: "Suppled docId \(id) not found")
+        }
+
         return HTTPStatus.ok
     }
 

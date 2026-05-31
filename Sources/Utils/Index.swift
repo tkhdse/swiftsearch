@@ -35,19 +35,26 @@ public actor Index {
         return self.docsList
     }
 
-    public func removeDoc(docId: UUID) -> Int {
-        if self.docsList[docId] == nil {
-            self.docsList.removeValue(forKey: docId)
+    public func removeDoc(docId: UUID) -> Bool {
+        guard self.docsList[docId] != nil else {
+            return false
         }
-
+        
+        self.docsList.removeValue(forKey: docId)
         // to do: update index structure
-
-        return 0
+        return true
     }
 
     func get(_ searchQuery: String) -> [UUID:Set<Int>] {
-        if let val = self.data[searchQuery] {
-            return val
+        if var token_data = self.data[searchQuery] {
+            
+            // lazy deletion: check for deleted document keys
+            for (id,_) in token_data {
+                if self.docsList[id] == nil {
+                    token_data.removeValue(forKey: id)
+                }
+            }
+            return token_data
         }
         return [:]
     }
