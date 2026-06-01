@@ -29,7 +29,6 @@ curl -X POST --data-binary @inputs/FILENAME.txt 127.0.0.1:8080/insert
 
 * GET `/info`: returns a list of registered documents.
 ```
-# still contains duplicate document upload bug -- fix this
 curl 127.0.0.1:8080/info
 ```
 
@@ -40,8 +39,7 @@ curl -X DELETE 127.0.0.1:8080/doc/[docId]
 
 
 ## To Do:
-* Finish `/remove/{doc_id}`
-* Protect against duplicate file uploads
+* Update document structure to include title and body fields. Both should be searchable
 * Persistence via WAL
 * Support more query patterns (boolean, phrase, prefix)
 * Avoid `/insert` for duplicate documents

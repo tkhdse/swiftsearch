@@ -1,5 +1,9 @@
 import Foundation
 
+/* 
+* QueryEngine is responsible for all search-related operations on the Index
+*/
+
 public actor QueryEngine {
     var index: Index
 
@@ -24,12 +28,6 @@ public actor QueryEngine {
 
         return await index.get(query)
     }
-
-    // public func insertDoc(document: sending Document) async -> Int {
-    //     let ret = await self.index.insert(document: document)
-    //     return ret
-    // }
-
 
     func searchForPhrase(tokens: [String]) async -> [UUID:Set<Int>] {
         var prev_token_data = await self.index.get(tokens[0])

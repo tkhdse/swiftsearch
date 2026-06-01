@@ -9,15 +9,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--endpoint", default="127.0.0.1:8080")
     parser.add_argument(
-        "--inputs",
+        "--docs",
         type=Path,
-        default=Path(__file__).resolve().parent.parent/"inputs"
+        default=Path(__file__).resolve().parent.parent/"docs"
     )
     args = parser.parse_args()
-    inputs_dir = args.inputs
+    docs_dir = args.docs
 
     if not inputs_dir.is_dir():
-        raise SystemExit(f"not a directory: {inputs_dir}")
+        raise SystemExit(f"not a directory: {docs_dir}")
     
     url = f"http://{args.endpoint.rstrip('/')}/insert"
 
