@@ -60,10 +60,10 @@ public actor Index {
     }
 
 
-    // public func search(_ query: String) {
-    //     let words = query.components(separateBy: " ")
+    public func keys() -> [String] {
+        return Array(self.data.keys)
+    }
 
-    // }
 
     public func peek() {
         print("Printing index ...")

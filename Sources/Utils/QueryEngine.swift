@@ -24,6 +24,8 @@ public actor QueryEngine {
         let tokens = query.components(separatedBy: " ")
         if tokens.count > 1 {
             return await searchForPhrase(tokens: tokens)
+        } else if (query[query.index(before: query.endIndex)] == "*") {
+            return await searchForPrefix(query: query)
         }
 
         return await index.get(query)
@@ -66,10 +68,27 @@ public actor QueryEngine {
         return prev_token_data
     }
 
-    func parseCommand(_ cmd: String) {
-        // support single-word queries first
-        // cmd.split(seperator: " ")
-        // use stack to support command chaining (??)
+
+    func searchForPrefix(query: String) async -> [UUID:Set<Int>] {
+        let idx = query.index(before: query.endIndex)
+        let searchToken = query[..<idx]
+        var results: [UUID:Set<Int>] = [:]
+
+        // merge results as we find matches to searchToken
+
+        for token in await self.index.keys() {
+            if searchToken.count > token.count {
+                continue
+            }
+
+            let tokenPrefix = token[..<idx]
+            if searchToken == tokenPrefix {
+                let token_data = await self.index.get(token)
+                results.merge(token_data) { (current, new) in current.union(new) }
+            }
+        }
+
+        return results
     }
 
 

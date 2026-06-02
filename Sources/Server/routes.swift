@@ -23,7 +23,7 @@ func routes(_ app: Application) throws {
 
         var docs: [[String:[String:String]]] = []
 
-        for (id, document) in id_to_doc {
+        for (_, document) in id_to_doc {
             let currDoc = [document.id.uuidString : [document.title : document.body]]
             docs.append(currDoc)
         }
