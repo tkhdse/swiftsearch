@@ -6,29 +6,32 @@ struct Query: Content {
     var q: String?
 }
 
+struct DocumentUpload: Content {
+    var title: String?
+    var body: String?
+}
+
 func routes(_ app: Application) throws {
     app.get { req async -> String in
         // try await req.view.render("index", ["title": "Hello Vapor!"])
         "OK"
     }
 
-    // app.get("hello") { req async -> String in
-    //     "Hello, world!"
-    // }
-
-    app.get("info") {req async throws -> [String] in 
+    app.get("info") {req async throws -> [[String:[String:String]]] in 
         let index = await req.application.queryEngine.getIndex()
         let id_to_doc = await index.getDocs()
 
-        var docs: [String] = []
+        var docs: [[String:[String:String]]] = []
 
-        for (id, content) in id_to_doc {
-            docs.append("\(id.uuidString): \(content)")
+        for (id, document) in id_to_doc {
+            let currDoc = [document.id.uuidString : [document.title : document.body]]
+            docs.append(currDoc)
         }
 
         // let docs = uuidDocs.map{ id in id.uuidString }
         return docs
     }
+
 
     app.get("search") { req async throws -> [String:[Int]] in
         let queryParams = try req.query.decode(Query.self) //req.parameters.get("query")!
@@ -43,9 +46,16 @@ func routes(_ app: Application) throws {
         return ret
     }
 
+
     app.post("insert") { req async throws in 
-        guard let body = req.body.string else { throw Abort(.badRequest) }
-        let doc = Document(body: body)
+        // guard let body = req.body.string else { throw Abort(.badRequest) }
+        let payload = try req.content.decode(DocumentUpload.self)//  else { throw Abort(.badRequest) }
+
+        guard let title = payload.title, let body = payload.body else {
+            throw Abort(.badRequest, reason: "Invalid document format received")
+        }
+
+        let doc = Document(title: title, body: body)
 
         let index = await req.application.queryEngine.getIndex()
         await index.insertDoc(document: doc)

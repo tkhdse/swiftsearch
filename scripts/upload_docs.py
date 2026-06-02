@@ -16,19 +16,23 @@ def main():
     args = parser.parse_args()
     docs_dir = args.docs
 
-    if not inputs_dir.is_dir():
+    if not docs_dir.is_dir():
         raise SystemExit(f"not a directory: {docs_dir}")
     
     url = f"http://{args.endpoint.rstrip('/')}/insert"
 
-    for path in sorted(inputs_dir.iterdir()):
+    for path in sorted(docs_dir.iterdir()):
         if not path.is_file():
             continue
         
         print(f"uploading {path.name} ...")
         body = path.read_bytes()
-
-        response = requests.post(url, data=body)
+        
+        payload = {
+            "title": path.name,
+            "body": body
+        }
+        response = requests.post(url, data=payload)
         response.raise_for_status()
 
 

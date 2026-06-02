@@ -4,7 +4,7 @@ public actor Index {
     // word -> ids -> position in doc(id)
     var data: [String: [UUID: Set<Int>]]
     var tokenizer: Tokenizer
-    var docsList: [UUID:String]
+    var docsList: [UUID:Document]
 
     public init() {
         self.data = [:] // token -> [UUID -> [positions]]
@@ -14,7 +14,7 @@ public actor Index {
 
     public func insertDoc(document: sending Document) -> Int {
         let id = document.id
-        let tokens = self.tokenizer.tokenize(input: document.content)
+        let tokens = self.tokenizer.tokenize(input: document.body)
 
         for i in 0...tokens.count-1 {
             let token = tokens[i]
@@ -27,11 +27,11 @@ public actor Index {
             self.data[token] = ids
         }
 
-        self.docsList[id] = document.content
+        self.docsList[id] = document
         return 0
     }
 
-    public func getDocs() -> [UUID:String] {
+    public func getDocs() async -> [UUID:Document] {
         return self.docsList
     }
 
